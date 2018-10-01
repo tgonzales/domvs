@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -15,6 +16,8 @@ import DeleteIcon from '@material-ui/icons/DeleteForever'
 import EditIcon from '@material-ui/icons/Edit'
 import TextField from '@material-ui/core/TextField';
 import NovoFuncionario from './novoFuncionario'
+
+import * as actions from '../store/actions'
 
 const styles = theme => ({
   root: {
@@ -33,13 +36,18 @@ class SimpleTable extends React.Component {
   }
 
   handleSubmit = payload => {
-    console.log('submit', payload)
+    const { novoFuncionario } = this.props
     this.setState({ modal: false })
+    novoFuncionario(payload)
+  }
+
+  handleRemoveFuncionario = payload => {
+    const { removeFuncionario } = this.props
+    removeFuncionario(payload)
   }
 
   render() {
     const { classes, funcionarios } = this.props;
-    console.log('funcionarios', funcionarios)
     return (
       <Paper className={classes.root}>
         <TextField
@@ -88,7 +96,7 @@ class SimpleTable extends React.Component {
                     <IconButton
                       className={classes.icon}
                       color='primary'
-                      onClick={() => {}}
+                      onClick={() => this.handleRemoveFuncionario(row)}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -117,4 +125,11 @@ const mapStateToProps = store => ({
   funcionarios: store.funcionarios.funcionarios
 });
 
-export default withStyles(styles)(connect(mapStateToProps)(SimpleTable))
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    novoFuncionario: actions.novoFuncionario,
+    removeFuncionario: actions.removeFuncionario
+  }, dispatch)
+}
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(SimpleTable))

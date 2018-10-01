@@ -18,6 +18,14 @@ export const funcionariosReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'LISTAR_FUNCIONARIOS':
       return { ...state };
+    case 'NOVO_FUNCIONARIO':
+      const insereFuncionario = [ ...state.funcionarios, action.payload ]
+      return { ...state, funcionarios: insereFuncionario };
+    case 'REMOVE_FUNCIONARIO':
+      let removeFuncionario = [ ...state.funcionarios ]
+      const index = removeFuncionario.indexOf(action.payload)
+      removeFuncionario.splice(index, 1);
+      return { ...state, funcionarios: removeFuncionario };
     default:
       return state;
   }
